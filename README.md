@@ -1,11 +1,15 @@
 # Endpoints
-1. /GET topplayers (params: count(optional)=3, sentiment(optional)='NETURAL|POSITIVE|NEGATIVE', interval(optional)=24)
-Note: interval is in number of hours (e.g. 1,24,24*7)
+1. /GET topplayers (params: count(optional)=3, sentiment(optional)='NETURAL|POSITIVE|NEGATIVE', interval(optional)=24).
+Note: interval is in number of hours (e.g. 1,24,24*7).
 Example:
+```bash
 GET https://sgc0m5do03.execute-api.us-east-1.amazonaws.com/dev/topplayers?interval=24&count=3
-Response:
-[{"player_full_name": "Joel Embiid", "count": "233", "ranking": "1", "past_count": "584", "past_ranking": "5"}, {"player_full_name": "LeBron James", "count": "159", "ranking": "2", "past_count": "1115", "past_ranking": "1"}, {"player_full_name": "Paul George", "count": "138", "ranking": "3", "past_count": "14", "past_ranking": "86"}]
+```
 
+Response:
+```json
+[{"player_full_name": "Joel Embiid", "count": "233", "ranking": "1", "past_count": "584", "past_ranking": "5"}, {"player_full_name": "LeBron James", "count": "159", "ranking": "2", "past_count": "1115", "past_ranking": "1"}, {"player_full_name": "Paul George", "count": "138", "ranking": "3", "past_count": "14", "past_ranking": "86"}]
+```
 2. /GET player (params: fullname="", starttime(optional)=24, endtime(optional)=0)
 Note: starttime/endtime are the number of hours from the current timestamp
 Example: https://sgc0m5do03.execute-api.us-east-1.amazonaws.com/dev/player?fullname=Trae%20Young&starttime=1000&endtime=0
