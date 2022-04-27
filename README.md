@@ -1,5 +1,13 @@
-# Endpoints
-1. /GET topplayers (params: count(optional)=3, sentiment(optional)='NETURAL|POSITIVE|NEGATIVE', interval(optional)=24)\
+# NBA Players Tweets Sentiment Real-time Analytics
+We want to generate and maintain in real-time the lists of the top 3 currently most loved and top 3 currently most hated NBA players on earth\
+
+- As NBA geeks, we want to know which players are currently the fans’ favorites, and which players are currently the most hated player on earth (probably Russell Westbrook right now)
+- We sort of know from the news and from our daily conversations with friends. But can we quantify it?
+- The list may change frequently, especially during the playoffs. So real-time analytics may be great!
+- We want to see from the fans’ perspective. Number of fan tweets and their sentiment are our metrics. Players’ game stats are not our concern.
+
+## Endpoints
+### 1. /GET topplayers (params: count(optional)=3, sentiment(optional)='NETURAL|POSITIVE|NEGATIVE', interval(optional)=24)\
 Note: interval is in number of hours (e.g. 1,24,24*7)\
 Example:
 ```bash
@@ -9,7 +17,7 @@ Response:
 ```json
 [{"player_full_name": "Joel Embiid", "count": "233", "ranking": "1", "past_count": "584", "past_ranking": "5"}, {"player_full_name": "LeBron James", "count": "159", "ranking": "2", "past_count": "1115", "past_ranking": "1"}, {"player_full_name": "Paul George", "count": "138", "ranking": "3", "past_count": "14", "past_ranking": "86"}]
 ```
-2. /GET player (params: fullname="", starttime(optional)=24, endtime(optional)=0)\
+### 2. /GET player (params: fullname="", starttime(optional)=24, endtime(optional)=0)\
 Note: starttime/endtime are the number of hours from the current timestamp\
 Example: 
 ```bash
@@ -20,7 +28,7 @@ Response:
 {"ALL": [{"player_full_name": "Trae Young", "count": "92", "ranking": "6"}], "POSITIVE": [{"player_full_name": "Trae Young", "count": "11", "ranking": "5"}], "NEGATIVE": [{"player_full_name": "Trae Young", "count": "10", "ranking": "6"}], "NEUTRAL": [{"player_full_name": "Trae Young", "count": "68", "ranking": "6"}]}
 ```
 
-3. /GET tweets (params: fullname="", count(optional)=3, start(optional)=24, end(optional)=0)\
+### 3. /GET tweets (params: fullname="", count(optional)=3, start(optional)=24, end(optional)=0)\
 Note: start/end are the number of hours from the current timestamp\
 count represents the num of tweets you want *for each* of the 3 sentiments\
 Example: 
@@ -31,7 +39,7 @@ Response:
 ```json
 [{"tweet_id": "1515099645764112386", "tweet_text": "\ud83d\udd25FD Odds Boost\ud83d\udd25\n\nI\u2019m really liking the value on both of these odds boosts! Garland has been on fire and Young is do for a bounce back game. \n\n#NBA #NBApicks #BasketballPicks #FreePicks #SportsBetting #SportsPicks #Betting #WinningPicks #GamblingTwitter #bettingtwitter https://t.co/5m3YYDu8F8", "sentiment": "POSITIVE", "created_at": "2022-04-15 22:47:59.000", "player_full_name": "Trae Young"}, {"tweet_id": "1515098758526214147", "tweet_text": "Picks for tonight: \nDarius Garland over 42 fantasy score\nBrandon Ingram over 23.5 points\nKevin Love over 7 rebounds\nTrae Young over 29.5 points\nCan also play Embiid .5 points if you haven\u2019t yet\n\n#nba #GamblingTwitter #nbabets #PrizePicks #nbaprops", "sentiment": "NEUTRAL", "created_at": "2022-04-15 22:44:27.000", "player_full_name": "Trae Young"}, {"tweet_id": "1515090073691193344", "tweet_text": "@IcecxldTony @Clippersia @LegendOfWinning Trae is the worst defender in the league PG13 is a consistent all nba defensive team level defender and a better shooter then Trae", "sentiment": "NEGATIVE", "created_at": "2022-04-15 22:09:57.000", "player_full_name": "Trae Young"}]
 ```
-4. /GET charts
+### 4. /GET charts
 Note: The "EmbedUrl" field in the response body are the charts\
 Example: 
 ```bash
@@ -61,15 +69,9 @@ Response:
 - Frontend integrate AWS Cognito for login/signup (assigned to Dhruvin. Half-way done, contact Mark for more details)
 - Mark has already written some code for the frontend in React. Check the front-end github repo for reference.
 
-# NBA Players Tweets Sentiment Real-time Analytics
-We want to generate and maintain in real-time the lists of the top 3 currently most loved and top 3 currently most hated NBA players on earth\
 
-- As NBA geeks, we want to know which players are currently the fans’ favorites, and which players are currently the most hated player on earth (probably Russell Westbrook right now)
-- We sort of know from the news and from our daily conversations with friends. But can we quantify it?
-- The list may change frequently, especially during the playoffs. So real-time analytics may be great!
-- We want to see from the fans’ perspective. Number of fan tweets and their sentiment are our metrics. Players’ game stats are not our concern.
 
-# Features
+## Features
 - Top 3 most liked players of the day/month
 - Top 3 most hated players of the day/month
 - See some of the recent tweets of the current top 3 most liked/hated players
