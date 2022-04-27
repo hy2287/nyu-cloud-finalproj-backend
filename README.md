@@ -41,8 +41,8 @@ Response:
 - Need to map players to team (we want only active players) 
 - Need to download & store players' photos in S3. The most popular 30~50 will suffice. 
 - Expose /GET photo (params: fullname="") which returns the S3Url for the photo of a specific player. The frontend will need it.
-4. Front end (assigned to ?)
-- Frontend integrate AWS Cognito for login/signup (assigned to ?. Half-way done, contact Mark for more details)
+4. Front end (assigned to Dhruvin)
+- Frontend integrate AWS Cognito for login/signup (assigned to Dhruvin. Half-way done, contact Mark for more details)
 - Mark has already written some code for the frontend in React. Check the front-end github repo for reference.
 
 # NBA Players Tweets Sentiment Real-time Analytics
