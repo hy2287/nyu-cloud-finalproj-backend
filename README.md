@@ -84,14 +84,9 @@ Response:
 {"ALL": [{"player_full_name": "Trae Young", "count": "92", "ranking": "6"}], "POSITIVE": [{"player_full_name": "Trae Young", "count": "11", "ranking": "5"}], "NEGATIVE": [{"player_full_name": "Trae Young", "count": "10", "ranking": "6"}], "NEUTRAL": [{"player_full_name": "Trae Young", "count": "68", "ranking": "6"}]}
 ```
 
-# TO DO (Everyone please update here from time to time)
-1. Expose all API endpoints to the frontend via API Gateway (assigned to Mark)
-2. Add user personalization and allow users to subscribe to get updates about their favorite players 
-- Write the backend logic to auto generate daily player report (assigned to Mark)
-- Integrate SNS/SES that sends the daily player reports to a list of email addresses (assigned to Mark)
-- Write the backend logic to store/maintain the user subscription details (assigned to Mark)
-- Set up AWS Cognito (assigned to ?. Half-way done, contact Mark for more details)
-3. NBA data scraping (assigned to ?)
+## TO DO (Everyone please update here from time to time)
+1. Set up and integrate AWS Cognito with the front end (assigned to ?)
+2. NBA data scraping (assigned to Joy)
 - Create a more comprehensive table for the current NBA players. One-off manual effort is needed
 - Currently only 2 columns (Fullname, Nicknames), we need (Fullname, Nicknames, PhotoS3Url, Team)
 - Third-party NBA API may be helpful
@@ -99,11 +94,12 @@ Response:
 - Need to map players to team (we want only active players) 
 - Need to download & store players' photos in S3. The most popular 30~50 will suffice. 
 - Expose /GET photo (params: fullname="") which returns the S3Url for the photo of a specific player. The frontend will need it.
-4. Front end (assigned to Dhruvin)
+3. Front end (assigned to Dhruvin)
 - Frontend integrate AWS Cognito for login/signup (assigned to Dhruvin. Half-way done, contact Mark for more details)
 - Mark has already written some code for the frontend in React. Check the front-end github repo for reference.
-
-
+4. Design email message for user subscription (assigned to ?)
+- We have the json result from GET /playerv2 but need to translate that into human readable paragraphs before publishing via SNS.
+- See LF3
 
 ## Features
 - Top 3 most liked players of the day/month
