@@ -2,6 +2,7 @@ import boto3
 import json
 import time
 
+sns = boto3.client('sns')
 athena = boto3.client('athena')
 quicksight = boto3.client('quicksight')
 
@@ -20,7 +21,7 @@ def getQuickSightUrl():
         
 
 def get_var_char_values(d):
-    return [obj['VarCharValue'] for obj in d['Data']]
+    return [obj['VarCharValue'] if 'VarCharValue' in obj else None for obj in d['Data']]
     
 def respond(err, res=None):
     return {
@@ -93,6 +94,25 @@ def getPlayer(fullname,start,end):
         result[sentiment] = athenaResult
     return result
 
+def getPlayerV2Handler(params):
+    if params is None or 'fullname' not in params:
+        return None
+    return getPlayerV2(params['fullname'])
+    
+def getPlayerV2(fullname):
+    queryStringTemplate = "SELECT 'hour' AS interval, 'all' AS sentiment, * FROM hourstatall WHERE \"player_full_name\" = '{0}' UNION \
+        SELECT 'hour' AS interval, 'positive' AS sentiment, * FROM hourstatpositive WHERE \"player_full_name\" = '{0}' UNION \
+        SELECT 'hour' AS interval, 'negative' AS sentiment, * FROM hourstatnegative WHERE \"player_full_name\" = '{0}' UNION \
+        SELECT 'day' AS interval, 'all' AS sentiment, * FROM daystatall WHERE \"player_full_name\" = '{0}' UNION \
+        SELECT 'day' AS interval, 'positive' AS sentiment, * FROM daystatpositive WHERE \"player_full_name\" = '{0}' UNION \
+        SELECT 'day' AS interval, 'negative' AS sentiment, * FROM daystatnegative WHERE \"player_full_name\" = '{0}' UNION \
+        SELECT 'week' AS interval, 'all' AS sentiment, * FROM weekstatall WHERE \"player_full_name\" = '{0}' UNION \
+        SELECT 'week' AS interval, 'positive' AS sentiment, * FROM weekstatpositive WHERE \"player_full_name\" = '{0}' UNION \
+        SELECT 'week' AS interval, 'negative' AS sentiment, * FROM weekstatnegative WHERE \"player_full_name\" = '{0}';"
+    queryString = queryStringTemplate.format(fullname)
+    s3location, athenaResult = queryAthena(queryString)
+    return athenaResult
+    
 def getTweetsHandler(params):
     if params is None:
         return None
@@ -124,7 +144,24 @@ def getTweets(fullname,start,end,number):
     s3location, athenaResult = queryAthena(queryString)
     return athenaResult
     
+def subscribeHandler(body):
+    if 'email' not in body or 'player' not in body:
+        return "without the field email or player"
+    email, player = body['email'], body['player']
+    player = player.replace(' ','_')
+    topicArn = "arn:aws:sns:us-east-1:617440612116:"+player
+    try:
+        res = sns.get_topic_attributes(TopicArn=topicArn)
+    except sns.exceptions.NotFoundException as nfe:
+        res = sns.create_topic(Name=player)
+    
+    res = sns.subscribe(TopicArn=topicArn,Protocol='email',Endpoint=email)
+    print(res)
+    return res
+        
+
 def queryAthena(queryString):
+    print(queryString)
     queryStart = athena.start_query_execution(
         QueryString = queryString,
         QueryExecutionContext = {
@@ -146,6 +183,7 @@ def queryAthena(queryString):
 
             ## Function to get output results
             response_query_result = athena.get_query_results(QueryExecutionId = queryExecutionID)
+            print(response_query_result)
             result_data = response_query_result['ResultSet']
             
             if len(response_query_result['ResultSet']['Rows']) > 1:
@@ -159,23 +197,20 @@ def queryAthena(queryString):
         else:
             time.sleep(5)
 
-def router(path,httpMethod,params):
+def router(path,httpMethod,params=None,body=None):
     if path=="/topplayers" and httpMethod=="GET":
         return respond(None, getTopPlayersHandler(params))
     elif path=="/player" and httpMethod=="GET":
         return respond(None, getPlayerHandler(params))
+    elif path=="/playerv2" and httpMethod=="GET":
+        return respond(None, getPlayerV2Handler(params))
     elif path=="/tweets" and httpMethod=="GET":
         return respond(None, getTweetsHandler(params))
     elif path=="/charts" and httpMethod=="GET":
         return respond(None, getQuickSightUrl())
+    elif path=="/subscribe" and httpMethod=="POST":
+        return respond(None, subscribeHandler(body))
     else:
-        # quicksightRes = getQuickSightUrl()
-        # athenaRes = getTopPlayers(10000, 0, 10, "NEGATIVE")
-        
-        # respondBody = {
-        #     'athenaQueryRes': athenaRes,
-        #     'quicksightRes': quicksightRes
-        # }
         respondBody = "Invalid http method/endpoint!"
         return respond(None, respondBody)
             
@@ -183,4 +218,5 @@ def router(path,httpMethod,params):
 def lambda_handler(event, context):
     print(event)
     params = event['queryStringParameters'] if 'queryStringParameters' in event else None
-    return router(event['path'],event['httpMethod'],params)
+    body = json.loads(event['body']) if 'body' in event and event['body'] is not None else None
+    return router(event['path'],event['httpMethod'],params,body)
