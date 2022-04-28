@@ -17,15 +17,14 @@ Response:
 ```json
 [{"player_full_name": "Joel Embiid", "count": "233", "ranking": "1", "past_count": "584", "past_ranking": "5"}, {"player_full_name": "LeBron James", "count": "159", "ranking": "2", "past_count": "1115", "past_ranking": "1"}, {"player_full_name": "Paul George", "count": "138", "ranking": "3", "past_count": "14", "past_ranking": "86"}]
 ```
-### 2. /GET player (params: fullname="", starttime(optional)=24, endtime(optional)=0)\
-Note: starttime/endtime are the number of hours from the current timestamp\
+### 2. /GET playerv2 (params: fullname="")\
 Example: 
 ```bash
-https://sgc0m5do03.execute-api.us-east-1.amazonaws.com/dev/player?fullname=Trae%20Young&starttime=1000&endtime=0
+GET https://sgc0m5do03.execute-api.us-east-1.amazonaws.com/dev/playerv2?fullname=Trae%20Young
 ```
 Response:
 ```json
-{"ALL": [{"player_full_name": "Trae Young", "count": "92", "ranking": "6"}], "POSITIVE": [{"player_full_name": "Trae Young", "count": "11", "ranking": "5"}], "NEGATIVE": [{"player_full_name": "Trae Young", "count": "10", "ranking": "6"}], "NEUTRAL": [{"player_full_name": "Trae Young", "count": "68", "ranking": "6"}]}
+[{"interval": "week", "sentiment": "positive", "player_full_name": "Trae Young", "count": "5", "ranking": "12", "past_count": "11", "past_ranking": "5"}, {"interval": "week", "sentiment": "all", "player_full_name": "Trae Young", "count": "45", "ranking": "14", "past_count": "92", "past_ranking": "6"}, {"interval": "day", "sentiment": "positive", "player_full_name": "Trae Young", "count": "5", "ranking": "12", "past_count": null, "past_ranking": null}, {"interval": "day", "sentiment": "negative", "player_full_name": "Trae Young", "count": "13", "ranking": "9", "past_count": null, "past_ranking": null}, {"interval": "week", "sentiment": "negative", "player_full_name": "Trae Young", "count": "13", "ranking": "9", "past_count": "10", "past_ranking": "6"}, {"interval": "day", "sentiment": "all", "player_full_name": "Trae Young", "count": "45", "ranking": "14", "past_count": null, "past_ranking": null}]
 ```
 
 ### 3. /GET tweets (params: fullname="", count(optional)=3, start(optional)=24, end(optional)=0)\
@@ -49,9 +48,44 @@ Response:
 ```json
 {"ResponseMetadata": {"RequestId": "67110bd0-b849-410e-b76e-be9f23e1d437", "HTTPStatusCode": 200, "HTTPHeaders": {"date": "Wed, 27 Apr 2022 18:56:23 GMT", "content-type": "application/json", "content-length": "1050", "connection": "keep-alive", "x-amzn-requestid": "67110bd0-b849-410e-b76e-be9f23e1d437"}, "RetryAttempts": 0}, "Status": 200, "EmbedUrl": "https://us-east-1.quicksight.aws.amazon.com/embed/2bce86dc541b42ae862ed56a6e1b3fd7/dashboards/6ccb3230-44ce-4c47-af10-ae80c12bd1fc?code=AYABePmKSmoiybgUX2WNUWgnt8kAAAABAAdhd3Mta21zAEthcm46YXdzOmttczp1cy1lYXN0LTE6MjU5NDgwNDYyMTMyOmtleS81NGYwMjdiYy03MDJhLTQxY2YtYmViNS0xNDViOTExNzFkYzMAuAECAQB4EeOLgrUr51nsHbjCawUUKjOqEm284CNxqOjvtm6TGiwBvsw5Yp3Tj9GiOQRSPESBUgAAAH4wfAYJKoZIhvcNAQcGoG8wbQIBADBoBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDGfAu5wXgkwVkTSuhwIBEIA7_3u0qIAib9yak3xjmEJfsgBUUA_xwEe3lKS-vbEgYGMD5VlFicURTodn-HivpZISUgby_EEJFwlUC9ECAAAAAAwAABAAAAAAAAAAAAAAAAAA753TwOou0hexFjEP8u2LFf____8AAAABAAAAAAAAAAAAAAABAAAA5fQZQiNrJIodzYnEJz4h0cN4S5RxVsTelUt8KwVQJCOnOExryciFIO97qvz78R0HqxtCSK3jaQOQt67ZCpc6fB4Fc7IMriqAa9y4nBSSeRTljLSTy9nfS3T4AcMdAtO65W_VD_uaEvy_KRfY-LqttPcJdmLUTdq7rVTPw9aFI5j6o_pinI30GHsLiCXHSi4Mg9yU2umc9vcGhc7CoRG6gvp-NHZjAauyaL7suZcda4B6X8SbaJXZyIj-VurFR51SepIB5AfzGk65S869G1Q_im_CPykbCyUQdDg4vGHHy7-XTBh_ZO2tWKe40D1nUn1ZIqqBsU-F&identityprovider=quicksight&isauthcode=true", "RequestId": "67110bd0-b849-410e-b76e-be9f23e1d437"}
 ```
+### 5. /POST subscribe (body: { user:"email", players:"Fullname"})
+```bash
+POST https://sgc0m5do03.execute-api.us-east-1.amazonaws.com/dev/subscribe
+{
+    "email":"markyamhs@gmail.com",
+    "player":"Ja Morant"
+}
+```
+Response:
+```json
+{
+    "SubscriptionArn": "pending confirmation",
+    "ResponseMetadata": {
+        "RequestId": "4772efe4-0695-5274-bb9c-b507f0f53fc2",
+        "HTTPStatusCode": 200,
+        "HTTPHeaders": {
+            "x-amzn-requestid": "4772efe4-0695-5274-bb9c-b507f0f53fc2",
+            "content-type": "text/xml",
+            "content-length": "298",
+            "date": "Thu, 28 Apr 2022 01:55:44 GMT"
+        },
+        "RetryAttempts": 0
+    }
+}
+```
+### 6. (Not used) /GET player (params: fullname="", starttime(optional)=24, endtime(optional)=0)\
+Note: starttime/endtime are the number of hours from the current timestamp\
+Example: 
+```bash
+https://sgc0m5do03.execute-api.us-east-1.amazonaws.com/dev/player?fullname=Trae%20Young&starttime=1000&endtime=0
+```
+Response:
+```json
+{"ALL": [{"player_full_name": "Trae Young", "count": "92", "ranking": "6"}], "POSITIVE": [{"player_full_name": "Trae Young", "count": "11", "ranking": "5"}], "NEGATIVE": [{"player_full_name": "Trae Young", "count": "10", "ranking": "6"}], "NEUTRAL": [{"player_full_name": "Trae Young", "count": "68", "ranking": "6"}]}
+```
+
 # TO DO (Everyone please update here from time to time)
 1. Expose all API endpoints to the frontend via API Gateway (assigned to Mark)
-- /POST subscribe (body: { user:"email", players:["Fullname","Fullname"] })
 2. Add user personalization and allow users to subscribe to get updates about their favorite players 
 - Write the backend logic to auto generate daily player report (assigned to Mark)
 - Integrate SNS/SES that sends the daily player reports to a list of email addresses (assigned to Mark)
