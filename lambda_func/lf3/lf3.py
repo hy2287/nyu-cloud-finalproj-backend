@@ -16,18 +16,30 @@ def json_to_emailtxt(json_file):
     f3 = json_file[3]
     f4 = json_file[4]
     f5 = json_file[5]
-    print("Know what is brewing about your favorite player on Twitter!\n\nToday",f1['player_full_name'],
-      "received a total of",f1['count'],'neutral tweets',',',f0['count'],'positive tweets and',f2['count'],
-      'negative tweets as compared to the tweets received yesterday i.e.',f1['past_count'],'neutral tweets',',',f0['past_count'],
-      'positive tweets and',f2['past_count'],'negative tweets. His current rankings as of today are',f1['ranking'],',',f0['ranking'],',',f2['ranking'],
-      ',for neutral, postive and negative tweets respectively as compared to his rankings yesterday which were',
-      f1['past_ranking'],',',f0['past_ranking'],',',f2['past_ranking'],'for the respective category of tweets.\n\n'+
-      'Summarizing the tweets for the previous week',f1['player_full_name'],
-      "received a total of",f3['count'],'neutral tweets',',',f4['count'],'positive tweets and',f5['count'],
-      'negative tweets as compared to the tweets received last week i.e.',f3['past_count'],'neutral tweets',',',f4['past_count'],
-      'positive tweets and',f5['past_count'],'negative tweets. His current rankings as of this week are',f3['ranking'],',',f4['ranking'],',',f5['ranking'],
-      ',for neutral, postive and negative tweets respectively as compared to his rankings for the previous which were',
-      f3['past_ranking'],',',f4['past_ranking'],',',f5['past_ranking'],'for the respective category of tweets.')
+    
+    l1 = ['Know what is brewing about your favorite player on Twitter!']
+
+    l2 = ['Today ',f1['player_full_name'],
+          ' received a total of ',f1['count'],' neutral tweets ',',',f0['count'],' positive tweets and ',f2['count'],
+          ' negative tweets as compared to the tweets received yesterday i.e.',f1['past_count'],' neutral tweets',',',f0['past_count'],
+          ' positive tweets and ',f2['past_count'],' negative tweets. His current rankings as of today are ',f1['ranking'],',',f0['ranking'],',',f2['ranking'],
+          ',for neutral, postive and negative tweets respectively as compared to his rankings yesterday which were ',
+          f1['past_ranking'],', ',f0['past_ranking'],', ',f2['past_ranking'],' for the respective category of tweets.']
+
+    l3 = ['Summarizing the tweets for the previous week ',f1['player_full_name'],
+          ' received a total of ',f3['count'],' neutral tweets',', ',f4['count'],' positive tweets and ',f5['count'],
+          ' negative tweets as compared to the tweets received last week i.e.',f3['past_count'],' neutral tweets ',', ',f4['past_count'],
+          ' positive tweets and ',f5['past_count'],' negative tweets. His current rankings as of this week are ',f3['ranking'],', ',f4['ranking'],', ',f5['ranking'],
+          ',for neutral, postive and negative tweets respectively as compared to his rankings for the previous which were ',
+          f3['past_ranking'],', ',f4['past_ranking'],', ',f5['past_ranking'],' for the respective category of tweets.']
+
+    mystringl1 = ''.join([str(item) for item in l1])
+    mystringl2 = ''.join([str(item) for item in l2])
+    mystringl3 = ''.join([str(item) for item in l3])
+
+    mystring = '\n\n'.join([mystringl1, mystringl2, mystringl3])
+    return mystring
+    
 
 def dispatchTopic(topicArn):
     name = getPlayerName(topicArn)
