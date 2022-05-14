@@ -55,7 +55,7 @@ def json_to_emailtxt(json_file):
           ' received a total of ',f3['count'],' neutral tweets',', ',f4['count'],' positive tweets and ',f5['count'],
           ' negative tweets as compared to the tweets received last week i.e.',f3['past_count'],' neutral tweets ',', ',f4['past_count'],
           ' positive tweets and ',f5['past_count'],' negative tweets. His current rankings as of this week are ',f3['ranking'],', ',f4['ranking'],', ',f5['ranking'],
-          ', for neutral, postive and negative tweets respectively as compared to his rankings for the previous which were ',
+          ', for neutral, postive and negative tweets respectively as compared to his rankings for the previous week which were ',
           f3['past_ranking'],', ',f4['past_ranking'],', ',f5['past_ranking'],' for the respective category of tweets.']
 
     mystringl1 = ''.join([str(item) for item in l1])
