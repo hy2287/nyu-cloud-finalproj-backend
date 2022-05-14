@@ -45,9 +45,9 @@ def json_to_emailtxt(json_file):
     l1 = ['Know what is brewing about your favorite player on Twitter!']
 
     l2 = ['Today ',f1['player_full_name'],
-          ' received a total of ',f1['count'],' neutral tweets ',',',f0['count'],' positive tweets and ',f2['count'],
-          ' negative tweets as compared to the tweets received yesterday i.e.',f1['past_count'],' neutral tweets',',',f0['past_count'],
-          ' positive tweets and ',f2['past_count'],' negative tweets. His current rankings as of today are ',f1['ranking'],',',f0['ranking'],',',f2['ranking'],
+          ' received a total of ',f1['count'],' neutral tweets',', ',f0['count'],' positive tweets and ',f2['count'],
+          ' negative tweets as compared to the tweets received yesterday i.e. ',f1['past_count'],' neutral tweets',', ',f0['past_count'],
+          ' positive tweets and ',f2['past_count'],' negative tweets. His current rankings as of today are ',f1['ranking'],', ',f0['ranking'],', ',f2['ranking'],
           ',for neutral, postive and negative tweets respectively as compared to his rankings yesterday which were ',
           f1['past_ranking'],', ',f0['past_ranking'],', ',f2['past_ranking'],' for the respective category of tweets.']
 
@@ -55,7 +55,7 @@ def json_to_emailtxt(json_file):
           ' received a total of ',f3['count'],' neutral tweets',', ',f4['count'],' positive tweets and ',f5['count'],
           ' negative tweets as compared to the tweets received last week i.e.',f3['past_count'],' neutral tweets ',', ',f4['past_count'],
           ' positive tweets and ',f5['past_count'],' negative tweets. His current rankings as of this week are ',f3['ranking'],', ',f4['ranking'],', ',f5['ranking'],
-          ',for neutral, postive and negative tweets respectively as compared to his rankings for the previous which were ',
+          ', for neutral, postive and negative tweets respectively as compared to his rankings for the previous which were ',
           f3['past_ranking'],', ',f4['past_ranking'],', ',f5['past_ranking'],' for the respective category of tweets.']
 
     mystringl1 = ''.join([str(item) for item in l1])
