@@ -73,7 +73,15 @@ Response:
     }
 }
 ```
-### 6. (Not used) /GET player (params: fullname="", starttime(optional)=24, endtime(optional)=0)\
+### 6. /GET subscribe (params: username="")
+```bash
+GET https://sgc0m5do03.execute-api.us-east-1.amazonaws.com/dev/subscribe?username=markyamhs@gmail.com
+```
+Response:
+```json
+["Chris Paul", "Giannis Antetokounmpo", "Lebron James"]
+```
+### 7. (Not used) /GET player (params: fullname="", starttime(optional)=24, endtime(optional)=0)\
 Note: starttime/endtime are the number of hours from the current timestamp\
 Example: 
 ```bash

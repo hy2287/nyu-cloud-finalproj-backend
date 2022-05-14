@@ -5,6 +5,8 @@ import time
 sns = boto3.client('sns')
 athena = boto3.client('athena')
 quicksight = boto3.client('quicksight')
+cognito = boto3.client('cognito-idp')
+cognitoUserpoolId = 'us-east-1_U3DZNzdcw'
 
 dynamo = boto3.client('dynamodb')
 
@@ -110,6 +112,9 @@ def getPlayerV2(fullname):
         SELECT 'week' AS interval, 'positive' AS sentiment, * FROM weekstatpositive WHERE \"player_full_name\" = '{0}' UNION \
         SELECT 'week' AS interval, 'negative' AS sentiment, * FROM weekstatnegative WHERE \"player_full_name\" = '{0}';"
     queryString = queryStringTemplate.format(fullname)
+    #-------
+    queryStringTemplate = "EXECUTE playerv2query USING '{0}', '{0}','{0}','{0}','{0}','{0}';"
+    queryString = queryStringTemplate.format(fullname)
     s3location, athenaResult = queryAthena(queryString)
     return athenaResult
     
@@ -150,11 +155,18 @@ def subscribeHandler(body):
     email, player = body['email'], body['player']
     player = player.replace(' ','_')
     topicArn = "arn:aws:sns:us-east-1:617440612116:"+player
+    
+    try:
+        group = cognito.get_group(GroupName=player, UserPoolId=cognitoUserpoolId)
+    except cognito.exceptions.ResourceNotFoundException as nfe:
+        cognito.create_group(GroupName=player, UserPoolId=cognitoUserpoolId)
+    cognito.admin_add_user_to_group(UserPoolId=cognitoUserpoolId, Username=email, GroupName=player)
+        
     try:
         res = sns.get_topic_attributes(TopicArn=topicArn)
     except sns.exceptions.NotFoundException as nfe:
         res = sns.create_topic(Name=player)
-    
+        
     res = sns.subscribe(TopicArn=topicArn,Protocol='email',Endpoint=email)
     print(res)
     return res
@@ -197,6 +209,18 @@ def queryAthena(queryString):
         else:
             time.sleep(5)
 
+def getSubscribeHandler(params):
+    if params is None or 'username' not in params:
+        return None
+    username = params['username']
+    response = cognito.admin_list_groups_for_user(
+        Username=username,
+        UserPoolId=cognitoUserpoolId
+    )
+    print(response)
+    return [obj['GroupName'].replace('_',' ') for obj in response['Groups']]
+    
+    
 def router(path,httpMethod,params=None,body=None):
     if path=="/topplayers" and httpMethod=="GET":
         return respond(None, getTopPlayersHandler(params))
@@ -210,6 +234,8 @@ def router(path,httpMethod,params=None,body=None):
         return respond(None, getQuickSightUrl())
     elif path=="/subscribe" and httpMethod=="POST":
         return respond(None, subscribeHandler(body))
+    elif path=="/subscribe" and httpMethod=="GET":
+        return respond(None, getSubscribeHandler(params))
     else:
         respondBody = "Invalid http method/endpoint!"
         return respond(None, respondBody)
